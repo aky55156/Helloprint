@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>HELLO PRINT - Staff Print Portal</title>
+
+<style>
+
+:root {
+    --bg-color: #f0f2f5;
+    --card-bg: #ffffff;
+    --text-color: #2d2d2d;
+    --text-muted: #718096;
+    --border-color: #e2e8f0;
+    --header-bg: #ffffff;
+    --sidebar-btn-bg: #ffffff;
+    --sidebar-btn-color: #4a5568;
+    --sidebar-btn-hover: #edf2f7;
+    --active-tab-bg: #d65a5a;
+    --active-tab-color: #ffffff;
+    --upload-bg: #fffaf0;
+    --upload-border: #f6ad55;
+    --upload-text: #744210;
+    --upload-subtext: #975a16;
+    --file-info-bg: #fafafa;
+    --file-info-border: #eeeeee;
+    --clock-bg: #2d3748;
+    --clock-text: #ffffff;
+}
+
+[data-theme="dark"] {
+    --bg-color: #121212;
+    --card-bg: #1e1e1e;
+    --text-color: #e0e0e0;
+    --text-muted: #a0aec0;
+    --border-color: #2d3748;
+    --header-bg: #1a1a1a;
+    --sidebar-btn-bg: #2d2d2d;
+    --sidebar-btn-color: #e2e8f0;
+    --sidebar-btn-hover: #3d3d3d;
+    --active-tab-bg: #e53e3e;
+    --active-tab-color: #ffffff;
+    --upload-bg: #2c2416;
+    --upload-border: #d69e2e;
+    --upload-text: #f6ad55;
+    --upload-subtext: #ed8936;
+    --file-info-bg: #252525;
+    --file-info-border: #333333;
+    --clock-bg: #4a5568;
+    --clock-text: #ffffff;
+}
+
+* {
+    box-sizing: border-box;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg-color);
+    color: var(--text-color);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* TOP HEADER BAR */
+.top-header {
+    background: var(--header-bg);
+    border-bottom: 1px solid var(--border-color);
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.brand-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--active-tab-bg);
+    letter-spacing: 1.5px;
+    margin: 0;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.controls-group {
+    display: flex;
+    gap: 8px;
+}
+
+.control-btn {
+    background: var(--sidebar-btn-bg);
+    color: var(--sidebar-btn-color);
+    border: 1px solid var(--border-color);
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.control-btn:hover {
+    background: var(--sidebar-btn-hover);
+}
+
+.datetime-box {
+    text-align: right;
+}
+
+.date-value {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+    font-weight: 500;
+}
+
+/* FLIP-STYLE REALTIME CLOCK */
+.flip-clock {
+    display: flex;
+    gap: 3px;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.flip-unit {
+    background: var(--clock-bg);
+    color: var(--clock-text);
+    font-family: monospace;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 2px 5px;
+    border-radius: 4px;
+}
+
+.flip-colon {
+    color: var(--text-muted);
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.container {
+    width: 100%;
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 0 15px;
+    display: flex;
+    gap: 20px;
+    flex-grow: 1;
+}
+
+.sidebar {
+    width: 220px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.tab-btn {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    background: var(--sidebar-btn-bg);
+    color: var(--sidebar-btn-color);
+    font-size: 14px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.tab-btn:hover {
+    background: var(--sidebar-btn-hover);
+}
+
+.tab-btn.active {
+    background: var(--active-tab-bg);
+    color: var(--active-tab-color);
+    border-color: var(--active-tab-bg);
+    box-shadow: 0 4px 12px rgba(214, 90, 90, 0.25);
+}
+
+.content-area {
+    flex-grow: 1;
+}
+
+.card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+    display: none;
+}
+
+.card.active {
+    display: block;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.header-icon {
+    font-size: 40px;
+    margin-bottom: 8px;
+}
+
+h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-color);
+    letter-spacing: 0.5px;
+}
+
+.subtitle {
+    margin-top: 5px;
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+.instructions {
+    background: var(--file-info-bg);
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--active-tab-bg);
+    border-radius: 10px;
+    padding: 15px;
+    color: var(--text-color);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.instructions ol {
+    margin: 8px 0 0 0;
+    padding-left: 18px;
+}
+
+/* LOGIN OVERLAY MODAL */
+#loginModal {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.login-card {
+    background: var(--card-bg);
+    width: 100%;
+    max-width: 420px;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    border: 1px solid var(--border-color);
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.form-select, .form-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--card-bg);
+    color: var(--text-color);
+    font-size: 14px;
+}
+
+.form-select option {
+    background: var(--card-bg);
+    color: var(--text-color);
+}
+
+.login-error {
+    color: #e53e3e;
+    font-size: 13px;
+    margin-bottom: 10px;
+    text-align: center;
+    display: none;
+}
+
+.user-badge {
+    background: var(--file-info-bg);
+    border: 1px solid var(--border-color);
+    padding: 10px 14px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+}
+
+.logout-link {
+    color: #3182ce;
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+/* UPLOAD AREA */
+.upload-area {
+    display: block;
+    border: 2px dashed var(--upload-border);
+    background: var(--upload-bg);
+    border-radius: 12px;
+    padding: 30px 15px;
+    text-align: center;
+    cursor: pointer;
+}
+
+#fileInput {
+    display: none;
+}
+
+.upload-icon {
+    font-size: 44px;
+    margin-bottom: 8px;
+}
+
+.upload-text {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--upload-text);
+}
+
+.upload-subtext {
+    margin-top: 5px;
+    font-size: 12px;
+    color: var(--upload-subtext);
+}
+
+.file-info {
+    display: none;
+    margin-top: 15px;
+    padding: 12px 14px;
+    background: var(--file-info-bg);
+    border: 1px solid var(--file-info-border);
+    border-radius: 10px;
+}
+
+.file-name {
+    font-weight: 600;
+    color: var(--text-color);
+    word-break: break-word;
+    font-size: 14px;
+}
+
+.file-size {
+    margin-top: 3px;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+button.action-btn {
+    width: 100%;
+    margin-top: 18px;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    background: #3182ce;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(49, 130, 206, 0.3);
+}
+
+button.action-btn:disabled {
+    background: #cbd5e0;
+    box-shadow: none;
+    cursor: not-allowed;
+}
+
+/* ANOTHER FILE BUTTON */
+#resetButton {
+    display: none;
+    width: 100%;
+    margin-top: 12px;
+    padding: 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background: var(--sidebar-btn-bg);
+    color: var(--text-color);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+#resetButton:hover {
+    background: var(--sidebar-btn-hover);
+}
+
+.progress-container {
+    display: none;
+    margin-top: 18px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--border-color);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress {
+    width: 0%;
+    height: 100%;
+    background: #3182ce;
+    transition: width 0.25s ease;
+}
+
+.progress-text {
+    text-align: center;
+    margin-top: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.message {
+    display: none;
+    margin-top: 18px;
+    padding: 14px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.success {
+    background: #f0faf3;
+    color: #287a45;
+    border: 1px solid #c9ead3;
+}
+
+.error {
+    background: #fff3f3;
+    color: #b72e2e;
+    border: 1px solid #f1caca;
+}
+
+/* DEVELOPER PROFILE PHOTO STYLING */
+.developer-profile {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.developer-avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--active-tab-bg);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.developer-info h4 {
+    margin: 0 0 4px 0;
+    font-size: 16px;
+    color: var(--text-color);
+}
+
+.developer-info p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.contact-card-inner {
+    background: var(--file-info-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+.contact-item {
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: var(--text-color);
+}
+
+.feedback-section {
+    margin-top: 16px;
+    text-align: center;
+}
+
+.feedback-placeholder {
+    padding: 16px;
+    background: var(--upload-bg);
+    border: 1px dashed var(--upload-border);
+    border-radius: 10px;
+    color: var(--upload-text);
+    font-size: 13px;
+}
+
+.feedback-link {
+    color: #dd6b20;
+    font-weight: 600;
+    text-decoration: none;
+    word-break: break-all;
+}
+
+/* MOBILE RESPONSIVE ADAPTATIONS */
+@media (max-width: 768px) {
+    .top-header {
+        padding: 10px 12px;
+        flex-direction: column;
+        gap: 8px;
+    }
+    .header-right {
+        width: 100%;
+        justify-content: space-between;
+    }
+    .brand-title {
+        font-size: 16px;
+    }
+    .container {
+        flex-direction: column;
+        margin: 10px auto;
+        padding: 0 10px;
+        gap: 12px;
+    }
+    .sidebar {
+        width: 100%;
+        flex-direction: row;
+        gap: 6px;
+    }
+    .tab-btn {
+        text-align: center;
+        padding: 10px 8px;
+        font-size: 13px;
+        border-radius: 8px;
+    }
+    .card {
+        padding: 18px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- STAFF LOGIN MODAL -->
+<div id="loginModal">
+    <div class="login-card">
+        <div class="header" style="margin-bottom: 15px;">
+            <div class="header-icon" style="font-size: 36px;">🔐</div>
+            <h1 style="font-size: 20px;" data-en="Staff Authentication" data-hi="स्टाफ प्रमाणीकरण">Staff Authentication</h1>
+            <div class="subtitle" data-en="Select your name and enter 4-digit PIN to print" data-hi="प्रिंट करने के लिए अपना नाम चुनें और 4-अंकों का पिन दर्ज करें">Select your name and enter 4-digit PIN to print</div>
+        </div>
+        <div class="login-error" id="loginError" data-en="Invalid PIN. Please try again." data-hi="अमान्य पिन। कृपया पुनः प्रयास करें।">Invalid PIN. Please try again.</div>
+        <div class="form-group">
+            <label class="form-label" data-en="Select Your Name" data-hi="अपना नाम चुनें">Select Your Name</label>
+            <select id="staffSelect" class="form-select">
+                <option value="">-- Choose Staff Member --</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-label" data-en="4-Digit PIN" data-hi="4-अंकों का पिन">4-Digit PIN</label>
+            <input type="password" id="staffPassword" class="form-input" maxlength="4" placeholder="Enter 4-digit PIN">
+        </div>
+        <button class="action-btn" onclick="handleLogin()" style="margin-top: 10px;" data-en="🔑 Login & Proceed" data-hi="🔑 लॉगिन करें">🔑 Login & Proceed</button>
+    </div>
+</div>
+
+<!-- TOP HEADER BAR -->
+<div class="top-header">
+    <div class="brand-title">HELLO PRINT</div>
+    <div class="header-right">
+        <div class="controls-group">
+            <button class="control-btn" id="themeToggle" onclick="toggleTheme()">🌙 Dark</button>
+            <button class="control-btn" id="langToggle" onclick="toggleLanguage()">🇮🇳 हिंदी</button>
+        </div>
+        <div class="datetime-box">
+            <div class="date-value" id="date">Loading...</div>
+            <div class="flip-clock" id="flipClock">
+                <span class="flip-unit" id="hours">00</span>
+                <span class="flip-colon">:</span>
+                <span class="flip-unit" id="minutes">00</span>
+                <span class="flip-colon">:</span>
+                <span class="flip-unit" id="seconds">00</span>
+                <span class="flip-unit" id="ampm" style="background:var(--active-tab-bg); margin-left:2px;">AM</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- LEFT SIDEBAR TABS -->
+    <div class="sidebar">
+        <button class="tab-btn active" onclick="switchTab('printTab', this)" data-en="🖨️ Print" data-hi="🖨️ प्रिंट">🖨️ Print</button>
+        <button class="tab-btn" onclick="switchTab('instructionsTab', this)" data-en="📌 Instructions" data-hi="📌 निर्देश">📌 Instructions</button>
+        <button class="tab-btn" onclick="switchTab('contactTab', this)" data-en="📞 Contact Us" data-hi="📞 संपर्क करें">📞 Contact Us</button>
+    </div>
+
+    <!-- CONTENT AREA -->
+    <div class="content-area">
+
+        <!-- 1. PRINT PANE -->
+        <div class="card active" id="printTab">
+            <div class="header">
+                <div class="header-icon">🖨️</div>
+                <h1 data-en="HELLO PRINT" data-hi="HELLO PRINT">HELLO PRINT</h1>
+                <div class="subtitle" data-en="Upload your PDF document for printing" data-hi="प्रिंट करने के लिए अपना पीडीएफ दस्तावेज़ अपलोड करें">Upload your PDF document for printing</div>
+            </div>
+
+            <!-- LOGGED IN USER BADGE -->
+            <div class="user-badge">
+                <div>👤 <span id="displayUserName">Staff</span> (<span id="displayUserDesig">Designation</span>)</div>
+                <div class="logout-link" onclick="handleLogout()" data-en="Switch User" data-hi="यूज़र बदलें">Switch User</div>
+            </div>
+
+            <!-- UPLOAD AREA WRAPPER -->
+            <div id="uploadWrapper">
+                <label for="fileInput" class="upload-area">
+                    <div class="upload-icon">📂</div>
+                    <div class="upload-text" data-en="Click to select PDF file" data-hi="पीडीएफ फ़ाइल चुनने के लिए क्लिक करें">Click to select PDF file</div>
+                    <div class="upload-subtext" data-en="Only PDF documents are supported" data-hi="केवल पीडीएफ दस्तावेज़ समर्थित हैं">Only PDF documents are supported</div>
+                    <input type="file" id="fileInput" accept=".pdf">
+                </label>
+
+                <div class="file-info" id="fileInfo">
+                    <div class="file-name" id="fileName"></div>
+                    <div class="file-size" id="fileSize"></div>
+                </div>
+
+                <button id="uploadButton" class="action-btn" disabled data-en="📤 Send for Printing" data-hi="📤 प्रिंट करने के लिए भेजें">
+                    📤 Send for Printing
+                </button>
+            </div>
+
+            <!-- PROGRESS BAR WITH PERCENTAGE -->
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-bar">
+                    <div class="progress" id="progress"></div>
+                </div>
+                <div class="progress-text" id="progressText">0%</div>
+            </div>
+
+            <!-- MESSAGE -->
+            <div class="message" id="message"></div>
+
+            <!-- UPLOAD ANOTHER FILE BUTTON -->
+            <button id="resetButton" onclick="resetUploadForm()" data-en="📁 Upload Another File" data-hi="📁 दूसरी फ़ाइल अपलोड करें">
+                📁 Upload Another File
+            </button>
+        </div>
+
+        <!-- 2. INSTRUCTIONS PANE -->
+        <div class="card" id="instructionsTab">
+            <div class="header">
+                <div class="header-icon">📌</div>
+                <h1 data-en="Instructions" data-hi="निर्देश">Instructions</h1>
+                <div class="subtitle" data-en="Guidelines for printing your documents" data-hi="आपके दस्तावेज़ प्रिंट करने के दिशानिर्देश">Guidelines for printing your documents</div>
+            </div>
+
+            <div class="instructions">
+                <strong data-en="Important Instructions" data-hi="महत्वपूर्ण निर्देश">Important Instructions</strong>
+                <ol style="margin-top: 10px;">
+                    <li style="margin-bottom: 10px;" data-en="Upload your PDF file using the Print tab and collect your documents from <strong>Amit's PC-connected printer.</strong>" data-hi="प्रिंट टैब का उपयोग करके अपनी पीडीएफ फ़ाइल अपलोड करें और <strong>अमित के पीसी से जुड़े प्रिंटर</strong> से अपने दस्तावेज़ एकत्र करें।">
+                        Upload your PDF file using the Print tab and collect your documents from
+                        <strong>Amit's PC-connected printer.</strong>
+                    </li>
+                    <li data-en="If your document has more than one page, please go to the printer and flip the pages manually, as the printer does not support duplex printing." data-hi="यदि आपके दस्तावेज़ में एक से अधिक पृष्ठ हैं, तो कृपया प्रिंटर पर जाएं और पृष्ठों को मैन्युअल रूप से पलटें, क्योंकि प्रिंटर डुप्लेक्स प्रिंटिंग का समर्थन नहीं करता है।">
+                        If your document has more than one page,
+                        please go to the printer and flip the pages manually,
+                        as the printer does not support duplex printing.
+                    </li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- 3. CONTACT US PANE -->
+        <div class="card" id="contactTab">
+            <div class="header">
+                <div class="header-icon">📞</div>
+                <h1 data-en="Contact Us" data-hi="संपर्क करें">Contact Us</h1>
+                <div class="subtitle" data-en="Get in touch or share your feedback" data-hi="संपर्क करें या अपनी प्रतिक्रिया साझा करें">Get in touch or share your feedback</div>
+            </div>
+
+            <!-- DEVELOPER PROFILE WITH YOUR EXACT EMBEDDED PHOTO -->
+            <div class="developer-profile">
+                <img src="data:image/png;base64,{{B64_DATA}}" id="devPhoto" alt="Amit Kumar Yadav" class="developer-avatar">
+                <div class="developer-info">
+                    <h4>Amit Kumar Yadav</h4>
+                    <p data-en="Developer & Administrator" data-hi="डेवलपर और एडमिनिस्ट्रेटर">Developer & Administrator</p>
+                </div>
+            </div>
+
+            <div class="contact-card-inner">
+                <div class="contact-item">
+                    <strong data-en="Developer:" data-hi="डेवलपर:">Developer:</strong> Amit Kumar Yadav
+                </div>
+                <div class="contact-item">
+                    <strong data-en="Email:" data-hi="ईमेल:">Email:</strong> aky55156@gmail.com
+                </div>
+                <div class="contact-item" style="margin-bottom: 0;">
+                    <strong data-en="Phone:" data-hi="फ़ोन:">Phone:</strong> +91 7503455156
+                </div>
+            </div>
+
+            <div class="feedback-section">
+                <h3 style="margin-bottom: 10px; font-size: 15px;" data-en="Feedback Form" data-hi="प्रतिक्रिया फ़ॉर्म">Feedback Form</h3>
+                <div class="feedback-placeholder" id="feedbackContainer">
+                    <span data-en="📝 Please share your feedback by filling out our" data-hi="📝 कृपया हमारे">📝 Please share your feedback by filling out our</span> 
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLScXjUR5CRE1xR_TMgGRzlqpyq1Jyx3XqmGOP30BgmYGTzTLRA/viewform?usp=dialog" target="_blank" class="feedback-link" data-en="Google Form." data-hi="गूगल फ़ॉर्म को भरकर अपनी प्रतिक्रिया साझा करें।">Google Form.</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwiDDzCjzssuzP4MEdR79eVmGPnJr0wmCulnPYHBb87KZuPw0jvdFSVd45gGpymv6s1zw/exec";
+
+// Staff Database with 4-digit PINs
+const staffDatabase = [
+    {name: "Amit Kumar Yadav", desig: "Developer", pass: "2648"},
+    {name: "Dr. Lata Kapoor", desig: "Additional Director", pass: "5821"},
+    {name: "Dr. Bibhash Nandi", desig: "Joint Director", pass: "9413"},
+    {name: "Dr. Stuti Kaushik", desig: "Assistant Director", pass: "3746"},
+    {name: "Dr. Anuja Gupta", desig: "Assistant Director", pass: "8190"},
+    {name: "Mr. Udaiveer Singh", desig: "Assistant Research Officer", pass: "6253"},
+    {name: "Mr. Manoranjan Mishra", desig: "Assistant Research Officer", pass: "4987"},
+    {name: "Dr. Swati Chauhan", desig: "Assistant Research Officer", pass: "7320"},
+    {name: "Dr. Madhusudan Chaturvedi", desig: "Research Assistant", pass: "1598"},
+    {name: "Mr. Vikram Jeet Yadav", desig: "Research Assistant", pass: "8462"},
+    {name: "Mr. Sachin Khandelwal", desig: "Research Assistant", pass: "3051"},
+    {name: "Mr. Shashi Kant Sharma", desig: "Technician", pass: "9684"},
+    {name: "Ms. Mamta Rav", desig: "Technician", pass: "2714"},
+    {name: "Ms. Priyanka", desig: "Technician", pass: "5309"},
+    {name: "Mr. Pramod Kumar Shrewas", desig: "Technician", pass: "6841"},
+    {name: "Mr. Yogander Prasad", desig: "Technician", pass: "1427"},
+    {name: "Mr. Ankit", desig: "Technician", pass: "7953"},
+    {name: "Mr. Munish Sharma", desig: "Insect Collector", pass: "3260"},
+    {name: "Mr. Aakash Tripathi", desig: "Laboratory Attendant", pass: "9185"},
+    {name: "Mr. Shiv Kumar", desig: "Animal Attendant", pass: "4037"},
+    {name: "Mr. Surender Singh", desig: "Laboratory Attendant", pass: "8612"},
+    {name: "Mr. Kishan Lal", desig: "Insect Collector", pass: "2549"},
+    {name: "Dr. Warisha Mariam", desig: "Public Health Specialist", pass: "6798"},
+    {name: "Dr. Dhirender Kumar", desig: "Microbiologist", pass: "1034"},
+    {name: "Dr. Shyama Datt", desig: "Microbiologist", pass: "7485"},
+    {name: "Dr. Swati Pattnaik", desig: "Microbiologist", pass: "3926"},
+    {name: "Dr. Rashi Raizada", desig: "Technical Officer", pass: "8215"},
+    {name: "Mr. Tapender", desig: "Research Assistant", pass: "5601"},
+    {name: "Mr. Mohd. Jishan", desig: "Research Assistant", pass: "9342"},
+    {name: "Dr. Balvindra Singh", desig: "Food Microbiologist", pass: "2187"},
+    {name: "Mr. Ravendra Kumar Kesarwani", desig: "Research Assistant", pass: "6450"},
+    {name: "Mr. Baheed Ahamad", desig: "Pharmacist", pass: "4793"},
+    {name: "Ms. Aashi Chauhan", desig: "Technical Assistant", pass: "1862"},
+    {name: "Ms. Ranjana Yadav", desig: "Technical Assistant", pass: "7309"},
+    {name: "Ms. Iram Naaz", desig: "Multipurpose Assistant", pass: "9514"},
+    {name: "Mr. Mohd Faizan", desig: "Multipurpose Assistant", pass: "3840"},
+    {name: "Dr. Shalu Kathuria", desig: "PH Technical Officer", pass: "6172"},
+    {name: "Harsh", desig: "Lab Attendant", pass: "2498"},
+    {name: "Alka", desig: "Lab Attendant", pass: "8935"},
+    {name: "Khushi Goel", desig: "Intern- CBDDR", pass: "5061"}
+];
+
+let currentUser = null;
+let currentLang = 'en';
+
+window.addEventListener("DOMContentLoaded", () => {
+    const select = document.getElementById("staffSelect");
+    staffDatabase.forEach((staff, index) => {
+        const opt = document.createElement("option");
+        opt.value = index;
+        opt.textContent = `${staff.name} (${staff.desig})`;
+        select.appendChild(opt);
+    });
+});
+
+function handleLogin() {
+    const selectIdx = document.getElementById("staffSelect").value;
+    const pwdInput = document.getElementById("staffPassword").value;
+    const errorBox = document.getElementById("loginError");
+
+    if (selectIdx === "") {
+        errorBox.textContent = currentLang === 'hi' ? "कृपया अपना नाम चुनें।" : "Please select your name.";
+        errorBox.style.display = "block";
+        return;
+    }
+
+    const staff = staffDatabase[selectIdx];
+    if (staff.pass === pwdInput) {
+        currentUser = staff;
+        document.getElementById("displayUserName").textContent = staff.name;
+        document.getElementById("displayUserDesig").textContent = staff.desig;
+        document.getElementById("loginModal").style.display = "none";
+        errorBox.style.display = "none";
+        document.getElementById("staffPassword").value = "";
+    } else {
+        errorBox.textContent = currentLang === 'hi' ? "गलत पिन। कृपया पुनः प्रयास करें।" : "Invalid PIN. Please try again.";
+        errorBox.style.display = "block";
+    }
+}
+
+function handleLogout() {
+    currentUser = null;
+    document.getElementById("staffSelect").value = "";
+    document.getElementById("staffPassword").value = "";
+    document.getElementById("loginError").style.display = "none";
+    document.getElementById("loginModal").style.display = "flex";
+}
+
+function toggleTheme() {
+    const html = document.documentElement;
+    const themeBtn = document.getElementById("themeToggle");
+    if (html.getAttribute("data-theme") === "dark") {
+        html.setAttribute("data-theme", "light");
+        themeBtn.textContent = "🌙 Dark";
+    } else {
+        html.setAttribute("data-theme", "dark");
+        themeBtn.textContent = "☀️ Light";
+    }
+}
+
+function toggleLanguage() {
+    currentLang = currentLang === 'en' ? 'hi' : 'en';
+    const langBtn = document.getElementById("langToggle");
+    langBtn.textContent = currentLang === 'en' ? "🇮🇳 हिंदी" : "🇬🇧 English";
+
+    document.querySelectorAll("[data-en]").forEach(el => {
+        if (el.dataset[currentLang]) {
+            el.innerHTML = el.dataset[currentLang];
+        }
+    });
+}
+
+function switchTab(tabId, btnElement) {
+    document.querySelectorAll('.card').forEach(card => card.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    btnElement.classList.add('active');
+}
+
+function updateDateTime() {
+    const now = new Date();
+    const locale = currentLang === 'hi' ? 'hi-IN' : 'en-IN';
+    document.getElementById("date").textContent = now.toLocaleDateString(locale, { weekday: "short", year: "numeric", month: "short", day: "numeric" });
+    
+    let hours = now.getHours();
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    const formattedHours = String(hours).padStart(2, '0');
+
+    document.getElementById("hours").textContent = formattedHours;
+    document.getElementById("minutes").textContent = minutes;
+    document.getElementById("seconds").textContent = seconds;
+    document.getElementById("ampm").textContent = ampm;
+}
+
+updateDateTime();
+setInterval(updateDateTime, 1000);
+
+const fileInput = document.getElementById("fileInput");
+const uploadButton = document.getElementById("uploadButton");
+const resetButton = document.getElementById("resetButton");
+const uploadWrapper = document.getElementById("uploadWrapper");
+const fileInfo = document.getElementById("fileInfo");
+const fileName = document.getElementById("fileName");
+const fileSize = document.getElementById("fileSize");
+const message = document.getElementById("message");
+const progressContainer = document.getElementById("progressContainer");
+const progress = document.getElementById("progress");
+const progressText = document.getElementById("progressText");
+
+let selectedFile = null;
+
+fileInput.addEventListener("change", function() {
+    const file = this.files[0];
+    if (!file) return;
+
+    selectedFile = file;
+    fileName.textContent = "📄 " + file.name;
+    fileSize.textContent = formatFileSize(file.size);
+    fileInfo.style.display = "block";
+    uploadButton.disabled = false;
+    progressContainer.style.display = "none";
+    progress.style.width = "0%";
+    progressText.textContent = "0%";
+    hideMessage();
+});
+
+uploadButton.addEventListener("click", function() {
+    if (!selectedFile || !currentUser) return;
+
+    uploadWrapper.style.display = "none";
+    progressContainer.style.display = "block";
+    
+    progress.style.width = "15%";
+    progressText.textContent = "15% - Reading file...";
+
+    const reader = new FileReader();
+
+    reader.onload = function() {
+        progress.style.width = "40%";
+        progressText.textContent = "40% - Preparing upload...";
+
+        const base64 = reader.result.split(",")[1];
+        const formData = new URLSearchParams();
+        formData.append("fileName", selectedFile.name);
+        formData.append("fileData", base64);
+        formData.append("uploaderName", currentUser.name);
+        formData.append("uploaderDesig", currentUser.desig);
+
+        progress.style.width = "75%";
+        progressText.textContent = "75% - Sending to printer...";
+
+        fetch(SCRIPT_URL, {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            progress.style.width = "100%";
+            progressText.textContent = "100% - Complete!";
+
+            if (data.success) {
+                const succMsg = currentLang === 'hi' 
+                    ? `✅ फ़ाइल सफलतापूर्वक अपलोड हो गई!<br><br>प्रेषक: <strong>${currentUser.name}</strong> (${currentUser.desig})<br>आपका दस्तावेज़ प्रिंट होने के लिए भेज दिया गया है।<br>कृपया <strong>अमित के पीसी से जुड़े प्रिंटर</strong> से अपना दस्तावेज़ एकत्र करें।`
+                    : `✅ File uploaded successfully!<br><br>Uploader: <strong>${currentUser.name}</strong> (${currentUser.desig})<br>Your document has been sent for printing.<br>Please collect your printed document from <strong>Amit's PC-connected printer.</strong>`;
+                showMessage(succMsg, "success");
+                
+                resetButton.style.display = "block";
+            } else {
+                showMessage("❌ " + data.message, "error");
+                uploadWrapper.style.display = "block";
+                progressContainer.style.display = "none";
+            }
+        })
+        .catch(error => {
+            console.error(error);
+            const errMsg = currentLang === 'hi' ? "❌ अपलोड विफल रहा।<br>कृपया पुनः प्रयास करें।" : "❌ Upload failed.<br>Please try again.";
+            showMessage(errMsg, "error");
+            uploadWrapper.style.display = "block";
+            progressContainer.style.display = "none";
+        });
+    };
+
+    reader.onerror = function() {
+        const errRdMsg = currentLang === 'hi' ? "❌ फ़ाइल नहीं पढ़ी जा सकी।" : "❌ Could not read the file.";
+        showMessage(errRdMsg, "error");
+        uploadWrapper.style.display = "block";
+        progressContainer.style.display = "none";
+    };
+
+    reader.readAsDataURL(selectedFile);
+});
+
+function resetUploadForm() {
+    selectedFile = null;
+    fileInput.value = "";
+    fileInfo.style.display = "none";
+    progressContainer.style.display = "none";
+    progress.style.width = "0%";
+    progressText.textContent = "0%";
+    hideMessage();
+    
+    resetButton.style.display = "none";
+    uploadWrapper.style.display = "block";
+    uploadButton.disabled = true;
+}
+
+function formatFileSize(bytes) {
+    if (bytes < 1024) return bytes + " bytes";
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+    return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+}
+
+function showMessage(text, type) {
+    message.innerHTML = text;
+    message.className = "message " + type;
+    message.style.display = "block";
+}
+
+function hideMessage() {
+    message.style.display = "none";
+}
+
+</script>
+
+</body>
+</html>
